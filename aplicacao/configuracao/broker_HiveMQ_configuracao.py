@@ -3,4 +3,6 @@ configuracao_broker_mqtt_HiveMQ = {
     "PORT": 8883,
     "CLIENT_NAME": "Elias",
     "PASSWORD": "projeto_redes",
+    "TOPIC": "PC",
+    "PUBlISH": "Mensagem do PC"
 }

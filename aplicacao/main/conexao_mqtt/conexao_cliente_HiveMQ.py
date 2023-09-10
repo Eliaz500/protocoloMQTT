@@ -1,12 +1,15 @@
 import paho.mqtt.client as mqtt
+from .callbacks_HiveMQ import on_connect_HiveMQ, on_subscribe_HiveMQ, on_message_HiveMQ, on_publish_HiveMQ
 
 class Conexao_Cliente_HiveMQ:
 
-    def __init__(self, broker_ip: str, port: int, client_name: str, password: str):
+    def __init__(self, broker_ip: str, port: int, client_name: str, password: str, topic: str, publish: str):
         self.__broker_ip = broker_ip
         self.__port = port
         self.__client_name = client_name
         self.__password = password
+        self.__topic = topic
+        self.__publish = publish
 
 
     def inicia_conexao_HiveMQ(self):
@@ -19,8 +22,20 @@ class Conexao_Cliente_HiveMQ:
         # definir nome de usuário e senha
         cliente_mqtt.username_pw_set(self.__client_name, self.__password)
 
+        # Callbacks
+        cliente_mqtt.on_connect = on_connect_HiveMQ
+        cliente_mqtt.on_subscribe = on_subscribe_HiveMQ
+        cliente_mqtt.on_message = on_message_HiveMQ
+        cliente_mqtt.on_publish = on_publish_HiveMQ
+
         # conecte-se ao HiveMQ Cloud na porta 8883 (padrão para MQTT)
         cliente_mqtt.connect(host=self.__broker_ip, port=self.__port)
+
+        # Recebe a mensagem
+        cliente_mqtt.subscribe(self.__topic, qos=1)
+
+        # Envia a mensagem
+        cliente_mqtt.publish("HiveMQ", payload=self.__publish, qos=1)
 
 
         self.__cliente_mqtt = cliente_mqtt
