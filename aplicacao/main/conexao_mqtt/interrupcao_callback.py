@@ -1,4 +1,4 @@
-from aplicacao.configuracao.broker_configuracao import configuracao_broker_mqtt
+from aplicacao.configuracao.broker_LOCALHOST_configuracao import configuracao_broker_mqtt
 
 def on_connect(client, userdata, flags, rc):
     if rc == 0:

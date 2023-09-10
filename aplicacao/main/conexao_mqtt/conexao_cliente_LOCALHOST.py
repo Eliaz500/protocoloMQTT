@@ -8,6 +8,8 @@ class Conexao_Cliente:
         self.__port = port
         self.__client_name = client_name
         self.__keepalive = keepalive
+        self.__cliente_mqtt = None
+
 
     def inicia_conexao(self):
         cliente_mqtt = mqtt.Client(self.__client_name)
@@ -17,6 +19,14 @@ class Conexao_Cliente:
         cliente_mqtt.on_subscribe = on_subscribe
         cliente_mqtt.on_message = on_message
 
-
         cliente_mqtt.connect(host=self.__broker_ip, port=self.__port, keepalive=self.__keepalive)
-        cliente_mqtt.loop_start()
+        self.__cliente_mqtt = cliente_mqtt
+        self.__cliente_mqtt.loop_start()
+
+    def finaliza_conexao(self):
+        try:
+            self.__cliente_mqtt.loop_stop()
+            self.__cliente_mqtt.disconnect()
+            return True
+        except:
+            return False
